@@ -8,6 +8,7 @@ read2path=$5 #reads.2.fq
 readUpath=$6 #reads.U.fq
 outhandle=$7 #Prefix for outhandles
 numthreads=$8 #Number of threads
+readLENGTH=$9 #Read length in bp
 
 ##Copy necessary files to scratch and create folders
 echo
@@ -70,8 +71,7 @@ echo
 cd /scratch/mcallis_binlooper/${outhandle}/concoct
 cat /scratch/mcallis_binlooper/${outhandle}/metabat/superspecific/${outhandle}_qccontig.fasta.depth.txt | cut -d$'\t' -f1,3 > /scratch/mcallis_binlooper/${outhandle}/concoct/${outhandle}_contigdepth.simple.txt
 sleep 10s
-echo "Edit the shell script here if you have shorter reads than 250bp"
-concoct --coverage_file /scratch/mcallis_binlooper/${outhandle}/concoct/${outhandle}_contigdepth.simple.txt --composition_file /scratch/mcallis_binlooper/${outhandle}/infiles/${outhandle}_qccontig.fasta -l 2000 -r 250 -b /scratch/mcallis_binlooper/${outhandle}/concoct/${outhandle}.concoct.out -s 0
+concoct --coverage_file /scratch/mcallis_binlooper/${outhandle}/concoct/${outhandle}_contigdepth.simple.txt --composition_file /scratch/mcallis_binlooper/${outhandle}/infiles/${outhandle}_qccontig.fasta -l 2000 -r ${readLENGTH} -b /scratch/mcallis_binlooper/${outhandle}/concoct/${outhandle}.concoct.out -s 0
 mkdir /scratch/mcallis_binlooper/${outhandle}/concoct/variance
 mv /scratch/mcallis_binlooper/${outhandle}/concoct/*variances* /scratch/mcallis_binlooper/${outhandle}/concoct/variance/
 concoct_pull_contigs.pl -f /scratch/mcallis_binlooper/${outhandle}/infiles/${outhandle}_qccontig.fasta -c /scratch/mcallis_binlooper/${outhandle}/concoct/${outhandle}.concoct.out_clustering_gt2000.csv -o ${outhandle}
